@@ -4,7 +4,7 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>OpenGLearnTexture.xcscheme</key>
+		<key>OpenGL_HelloTriangle.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -12,7 +12,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>3828B51F1E66D09D008F3ADC</key>
+		<key>38E9506E1E94C63D0058C738</key>
 		<dict>
 			<key>primary</key>
 			<true/>
