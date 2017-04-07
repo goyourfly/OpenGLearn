@@ -12,25 +12,26 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <math.h>
+#include "Shader.hpp"
 
 
-GLchar * vertexShaderSource =
-"#version 330 core\n"
-"layout (location = 0) in vec3 position;\n"
-"void main()\n"
-"{"
-"gl_Position = vec4(position,1.0f);\n"
-"}\n";
-
-GLchar * fragmentShaderSource =
-"#version 330 core\n"
-"out vec4 color;\n"
-"uniform vec4 outColor;"
-"void main()\n"
-"{"
-"color = outColor;\n"
-//"color = vec4(1.0f,0.5f,0.2f,1.0f);\n"
-"}\n";
+//GLchar * vertexShaderSource =
+//"#version 330 core\n"
+//"layout (location = 0) in vec3 position;\n"
+//"void main()\n"
+//"{"
+//"gl_Position = vec4(position,1.0f);\n"
+//"}\n";
+//
+//GLchar * fragmentShaderSource =
+//"#version 330 core\n"
+//"out vec4 color;\n"
+//"uniform vec4 outColor;"
+//"void main()\n"
+//"{"
+//"color = outColor;\n"
+////"color = vec4(1.0f,0.5f,0.2f,1.0f);\n"
+//"}\n";
 
 void key_callback(GLFWwindow* window,int key,int scancode,int action, int mode ){
     std::cout << "key press in:" << key <<  std::endl;
@@ -97,33 +98,38 @@ int main(int argc) {
     // 将数据传送给VBO
     glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
     
-    // 创建Shader
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    // 绑定Shader程序
-    glShaderSource(vertexShader,1,&vertexShaderSource, NULL);
-    // 完成
-    glCompileShader(vertexShader);
+//    // 创建Shader
+//    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+//    // 绑定Shader程序
+//    glShaderSource(vertexShader,1,&vertexShaderSource, NULL);
+//    // 完成
+//    glCompileShader(vertexShader);
+//    
+//    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+//    glShaderSource(fragmentShader,1,&fragmentShaderSource,NULL);
+//    glCompileShader(fragmentShader);
+//    
+//    // 将两个shader链接起来
+//    GLuint shaderProgram = glCreateProgram();
+//    glAttachShader(shaderProgram,vertexShader);
+//    glAttachShader(shaderProgram,fragmentShader);
+//    glLinkProgram(shaderProgram);
+//    
+//    // 在Link之后就可以删除这两个Shader了
+//    glDeleteShader(vertexShader);
+//    glDeleteShader(fragmentShader);
+
+    GLchar* vPath = "/Users/gaoyufei/Dev/workspace/mine/OpenGLearn/OpenGL_HelloTriangle/OpenGL_HelloTriangle/shaders/default.vs";
+    GLchar* fPath = "/Users/gaoyufei/Dev/workspace/mine/OpenGLearn/OpenGL_HelloTriangle/OpenGL_HelloTriangle/shaders/default.frag";
     
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader,1,&fragmentShaderSource,NULL);
-    glCompileShader(fragmentShader);
+    Shader ourShader(vPath,fPath);
     
-    // 将两个shader链接起来
-    GLuint shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram,vertexShader);
-    glAttachShader(shaderProgram,fragmentShader);
-    glLinkProgram(shaderProgram);
-    
-    // 在Link之后就可以删除这两个Shader了
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
     
     // 告诉VertexShader我的数据源(VBO)是什么组织结构的
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
     
     glBindVertexArray(0);
-    
     
     // ------------------------Loop and refresh UI----------------------
     while(!glfwWindowShouldClose(window)){
@@ -134,8 +140,9 @@ int main(int argc) {
         
         //...
         GLfloat green = sin(glfwGetTime())/2 + 0.5f;
-        GLint outColorLocation = glGetUniformLocation(shaderProgram,"outColor");
-        glUseProgram(shaderProgram);
+        GLint outColorLocation = glGetUniformLocation(ourShader.Program,"outColor");
+//        glUseProgram(shaderProgram);
+        ourShader.Use();
         glUniform4f(outColorLocation,0.0f,green,0.0f,1.0f);
         
         glBindVertexArray(VAO);

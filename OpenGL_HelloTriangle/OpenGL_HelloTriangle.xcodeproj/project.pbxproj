@@ -34,6 +34,9 @@
 		38E9507E1E94C9CD0058C738 /* libGLEW.2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.0.0.dylib; path = ../../../../../../../usr/local/lib/libGLEW.2.0.0.dylib; sourceTree = "<group>"; };
 		38E9507F1E94C9CD0058C738 /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		38E950821E94C9DF0058C738 /* libSOIL.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSOIL.dylib; path = ../../../../../../../opt/local/lib/libSOIL.dylib; sourceTree = "<group>"; };
+		38E950851E97369A0058C738 /* Shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Shader.hpp; sourceTree = "<group>"; };
+		38E950881E973E940058C738 /* default.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = default.frag; path = shaders/default.frag; sourceTree = "<group>"; };
+		38E950891E973E940058C738 /* default.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = default.vs; path = shaders/default.vs; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +74,9 @@
 		38E950711E94C63D0058C738 /* OpenGL_HelloTriangle */ = {
 			isa = PBXGroup;
 			children = (
+				38E950871E973ACD0058C738 /* shader */,
 				38E950721E94C63D0058C738 /* main.cpp */,
+				38E950851E97369A0058C738 /* Shader.hpp */,
 			);
 			path = OpenGL_HelloTriangle;
 			sourceTree = "<group>";
@@ -86,6 +91,15 @@
 				38E9507A1E94C9180058C738 /* OpenGL.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		38E950871E973ACD0058C738 /* shader */ = {
+			isa = PBXGroup;
+			children = (
+				38E950881E973E940058C738 /* default.frag */,
+				38E950891E973E940058C738 /* default.vs */,
+			);
+			name = shader;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
