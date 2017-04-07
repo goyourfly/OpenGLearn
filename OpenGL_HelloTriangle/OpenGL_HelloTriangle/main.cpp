@@ -11,6 +11,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <math.h>
 
 
 GLchar * vertexShaderSource =
@@ -24,9 +25,11 @@ GLchar * vertexShaderSource =
 GLchar * fragmentShaderSource =
 "#version 330 core\n"
 "out vec4 color;\n"
+"uniform vec4 outColor;"
 "void main()\n"
 "{"
-"color = vec4(1.0f,0.5f,0.2f,1.0f);\n"
+"color = outColor;\n"
+//"color = vec4(1.0f,0.5f,0.2f,1.0f);\n"
 "}\n";
 
 void key_callback(GLFWwindow* window,int key,int scancode,int action, int mode ){
@@ -68,10 +71,15 @@ int main(int argc) {
     
     
     GLfloat vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
+         0.5f,  0.5f, 0.0f, // TR
+         0.5f, -0.5f, 0.0f, // BR
+        -0.5f,  0.5f, 0.0f, // TL
+        
+         0.5f, -0.5f, 0.0f, // BR
+        -0.5f, -0.5f, 0.0f, // BL
+        -0.5f,  0.5f, 0.0f, // TL
     };
+    
     
     // VAO是一个存储VBO之类的数组
     GLuint VAO;
@@ -125,9 +133,13 @@ int main(int argc) {
         
         
         //...
+        GLfloat green = sin(glfwGetTime())/2 + 0.5f;
+        GLint outColorLocation = glGetUniformLocation(shaderProgram,"outColor");
         glUseProgram(shaderProgram);
+        glUniform4f(outColorLocation,0.0f,green,0.0f,1.0f);
+        
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
         //...
         
