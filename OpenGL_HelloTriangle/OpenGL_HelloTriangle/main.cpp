@@ -12,6 +12,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <math.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "Shader.hpp"
 
 
@@ -70,17 +73,62 @@ int main(int argc) {
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
     
+    glEnable(GL_DEPTH_TEST);
+    
+    
+//    GLfloat vertices[] = {
+//         0.5f,  0.5f, 0.0f, // TR
+//         0.5f, -0.5f, 0.0f, // BR
+//        -0.5f,  0.5f, 0.0f, // TL
+//        
+//         0.5f, -0.5f, 0.0f, // BR
+//        -0.5f, -0.5f, 0.0f, // BL
+//        -0.5f,  0.5f, 0.0f, // TL
+//    };
     
     GLfloat vertices[] = {
-         0.5f,  0.5f, 0.0f, // TR
-         0.5f, -0.5f, 0.0f, // BR
-        -0.5f,  0.5f, 0.0f, // TL
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
         
-         0.5f, -0.5f, 0.0f, // BR
-        -0.5f, -0.5f, 0.0f, // BL
-        -0.5f,  0.5f, 0.0f, // TL
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
-    
     
     // VAO是一个存储VBO之类的数组
     GLuint VAO;
@@ -125,29 +173,93 @@ int main(int argc) {
     Shader ourShader(vPath,fPath);
     
     
+    GLchar* vPath2 = "/Users/gaoyufei/Dev/workspace/mine/OpenGLearn/OpenGL_HelloTriangle/OpenGL_HelloTriangle/shaders/light.vs";
+    GLchar* fPath2 = "/Users/gaoyufei/Dev/workspace/mine/OpenGLearn/OpenGL_HelloTriangle/OpenGL_HelloTriangle/shaders/light.frag";
+    
+    Shader lightShader(vPath2,fPath2);
+    
+    
     // 告诉VertexShader我的数据源(VBO)是什么组织结构的
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,5 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
     
     glBindVertexArray(0);
     
+    
+    glm::mat4 view;
+    view = glm::translate(view, glm::vec3(0.0f,0.0f,-3.0f));
+    
+    glm::mat4 projection;
+    float screenWidth = width;
+    float screenHeight = height;
+    projection = glm::perspective(45.0f, screenWidth/screenHeight,0.1f,100.0f);
+    
+    GLuint lightVAO;
+    glGenVertexArrays(1,&lightVAO);
+    glBindVertexArray(lightVAO);
+    glBindBuffer(GL_ARRAY_BUFFER,VBO);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,5 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    glBindVertexArray(0);
+    
+    glm::vec3 lightPos(0.2f, 0.2f, 2.0f);
+    
     // ------------------------Loop and refresh UI----------------------
     while(!glfwWindowShouldClose(window)){
         glfwPollEvents();
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.0f,0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
         
         
         //...
-        GLfloat green = sin(glfwGetTime())/2 + 0.5f;
-        GLint outColorLocation = glGetUniformLocation(ourShader.Program,"outColor");
-//        glUseProgram(shaderProgram);
+
         ourShader.Use();
-        glUniform4f(outColorLocation,0.0f,green,0.0f,1.0f);
+        
+        GLint objectColorLoc = glGetUniformLocation(ourShader.Program, "objectColor");
+        GLint lightColorLoc  = glGetUniformLocation(ourShader.Program, "lightColor");
+        glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
+        glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f); // Also set light's color (white)
+        
+        GLint modelLoc = glGetUniformLocation(ourShader.Program, "model");
+        glm::mat4 model;
+        model = glm::rotate(model, (GLfloat)glfwGetTime() * 1.0f, glm::vec3(0.5f, 1.0f, 0.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        
+        GLint viewLoc = glGetUniformLocation(ourShader.Program,"view");
+        glUniformMatrix4fv(viewLoc,1,GL_FALSE,glm::value_ptr(view));
+        
+        GLint projectionLoc = glGetUniformLocation(ourShader.Program,"projection");
+        glUniformMatrix4fv(projectionLoc,1,GL_FALSE,glm::value_ptr(projection));
         
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
+
+        
+        // light
+        
+        lightShader.Use();
+
+        
+        model = glm::mat4();
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.1f));
+        
+        modelLoc = glGetUniformLocation(lightShader.Program, "model");
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        
+        viewLoc = glGetUniformLocation(lightShader.Program,"view");
+        glUniformMatrix4fv(viewLoc,1,GL_FALSE,glm::value_ptr(view));
+        
+        projectionLoc = glGetUniformLocation(lightShader.Program,"projection");
+        glUniformMatrix4fv(projectionLoc,1,GL_FALSE,glm::value_ptr(projection));
+
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        
+        
+
         //...
         
         glfwSwapBuffers(window);

@@ -27,6 +27,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		380277ED1EA4B4A900F81283 /* light.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = light.frag; path = shaders/light.frag; sourceTree = "<group>"; };
+		380277EE1EA4B4A900F81283 /* light.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = light.vs; path = shaders/light.vs; sourceTree = "<group>"; };
 		38E9506F1E94C63D0058C738 /* OpenGL_HelloTriangle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = OpenGL_HelloTriangle; sourceTree = BUILT_PRODUCTS_DIR; };
 		38E950721E94C63D0058C738 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		38E9507A1E94C9180058C738 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
@@ -96,6 +98,8 @@
 		38E950871E973ACD0058C738 /* shader */ = {
 			isa = PBXGroup;
 			children = (
+				380277ED1EA4B4A900F81283 /* light.frag */,
+				380277EE1EA4B4A900F81283 /* light.vs */,
 				38E950881E973E940058C738 /* default.frag */,
 				38E950891E973E940058C738 /* default.vs */,
 			);
@@ -304,6 +308,7 @@
 				38E950781E94C63D0058C738 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
