@@ -189,8 +189,10 @@ int main(int argc) {
     glBindVertexArray(0);
     
     
+    glm::vec3 viewPos(0.0f,0.0f,-3.0f);
+    
     glm::mat4 view;
-    view = glm::translate(view, glm::vec3(0.0f,0.0f,-3.0f));
+    view = glm::translate(view, viewPos);
     
     glm::mat4 projection;
     float screenWidth = width;
@@ -205,7 +207,7 @@ int main(int argc) {
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
     
-    glm::vec3 lightPos(0.2f, 0.2f, 2.0f);
+    glm::vec3 lightPos(-0.3f, 0.3f, 2.0f);
     
     // ------------------------Loop and refresh UI----------------------
     while(!glfwWindowShouldClose(window)){
@@ -218,14 +220,49 @@ int main(int argc) {
 
         ourShader.Use();
         
+        
+        GLint matAmbientLoc  = glGetUniformLocation(ourShader.Program, "material.ambient");
+        GLint matDiffuseLoc  = glGetUniformLocation(ourShader.Program, "material.diffuse");
+        GLint matSpecularLoc = glGetUniformLocation(ourShader.Program, "material.specular");
+        GLint matShineLoc    = glGetUniformLocation(ourShader.Program, "material.shininess");
+        
+//        glUniform3f(matAmbientLoc,  1.0f, 0.5f, 0.31f);
+//        glUniform3f(matDiffuseLoc,  1.0f, 0.5f, 0.31f);
+//        glUniform3f(matSpecularLoc, 0.5f, 0.5f, 0.5f);
+//        glUniform1f(matShineLoc,    32.0f);
+        
+//        white rubber	0.05	0.05	0.05	0.5	0.5	0.5	0.7	0.7	0.7	.078125
+//        glUniform3f(matAmbientLoc,  0.05f, 0.05f, 0.05f);
+//        glUniform3f(matDiffuseLoc,  0.05f, 0.05f, 0.05f);
+//        glUniform3f(matSpecularLoc, 0.7f, 0.7f, 0.7f);
+//        glUniform1f(matShineLoc,    0.078125f);
+        
+//        jade	0.135	0.2225	0.1575	0.54	0.89	0.63	0.316228	0.316228	0.316228	0.1
+        glUniform3f(matAmbientLoc,  0.135f, 0.2225f, 0.1575f);
+        glUniform3f(matDiffuseLoc,  0.54f, 0.89f, 0.63f);
+        glUniform3f(matSpecularLoc, 0.316228f, 0.316628f, 0.316628f);
+        glUniform1f(matShineLoc,    1.0f);
+        
+        
+        GLint lightAmbientLoc  = glGetUniformLocation(ourShader.Program, "light.ambient");
+        GLint lightDiffuseLoc  = glGetUniformLocation(ourShader.Program, "light.diffuse");
+        GLint lightSpecularLoc = glGetUniformLocation(ourShader.Program, "light.specular");
+        
+        glUniform3f(lightAmbientLoc,  0.2f, 0.2f, 0.2f);
+        glUniform3f(lightDiffuseLoc,  0.5f, 0.5f, 0.5f); // Let's darken the light a bit to fit the scene
+        glUniform3f(lightSpecularLoc, 1.0f, 1.0f, 1.0f);
+
+        
         GLint objectColorLoc = glGetUniformLocation(ourShader.Program, "objectColor");
         GLint lightColorLoc  = glGetUniformLocation(ourShader.Program, "lightColor");
-        glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);
+        glUniform3f(objectColorLoc, 1.0f, 1.0f, 0.31f);
         glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f); // Also set light's color (white)
         
         GLint modelLoc = glGetUniformLocation(ourShader.Program, "model");
         glm::mat4 model;
-        model = glm::rotate(model, (GLfloat)glfwGetTime() * 1.0f, glm::vec3(0.5f, 1.0f, 0.0f));
+        model = glm::rotate(model, (GLfloat)glfwGetTime() * 0.2f, glm::vec3(0.5f, 0.5f, 0.5f));
+//        GLfloat scale = (sin(glfwGetTime()) + 1) / 2 + 0.5f;
+//        model = glm::scale(model, glm::vec3(scale));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         
         GLint viewLoc = glGetUniformLocation(ourShader.Program,"view");
@@ -235,7 +272,13 @@ int main(int argc) {
         glUniformMatrix4fv(projectionLoc,1,GL_FALSE,glm::value_ptr(projection));
         
         GLint lightPosLoc = glGetUniformLocation(ourShader.Program, "lightPos");
+//        GLfloat lightX = sin(glfwGetTime() * 2);
+//        GLfloat lightZ = cos(glfwGetTime() * 2);
+//        lightPos = glm::vec3(lightX,0,lightZ);
         glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z);
+        
+        GLint viewPosLoc = glGetUniformLocation(ourShader.Program,"viewPos");
+        glUniform3f(viewPosLoc, viewPos.x,viewPos.y,viewPos.z);
         
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -249,7 +292,7 @@ int main(int argc) {
         
         model = glm::mat4();
         model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.1f));
+        model = glm::scale(model, glm::vec3(0.05f));
         
         modelLoc = glGetUniformLocation(lightShader.Program, "model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
